@@ -364,7 +364,7 @@ open class FormInputAutoComplete : RelativeLayout, TextWatcher {
             }
         }
     }
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+    override fun beforeTextChanged(s: CharSequence?, start: Int, before: Int, after: Int) {
         val list = mListeners
         if (list != null) {
             val count = list.size
@@ -373,7 +373,7 @@ open class FormInputAutoComplete : RelativeLayout, TextWatcher {
             }
         }
     }
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, pcount: Int) {
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, after: Int) {
         if (!isFirstOpen) {
             inputBoxOnTextChange(s.toString())
         }
@@ -382,7 +382,7 @@ open class FormInputAutoComplete : RelativeLayout, TextWatcher {
         if (list != null) {
             val count = list.size
             for (i in 0 until count) {
-                list[i].onTextChanged(s, start, before, pcount)
+                list[i].onTextChanged(s, start, before, after)
             }
         }
         isFirstOpen=false
