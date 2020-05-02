@@ -93,7 +93,7 @@ class FormInputText : RelativeLayout, TextWatcher  {
             setBackground(mBackground)
             mErrorMessage= String.format(resources.getString(R.string.cantBeEmpty), mLabel)
             txtInputBox.addTextChangedListener(this)
-            txtInputBox.setOnFocusChangeListener { view, hasFocus -> mFocusListener?.onFocusChange(v, hasFocus) }
+            txtInputBox.setOnFocusChangeListener { view, hasFocus -> mFocusListener?.onFocusChange(view, hasFocus) }
             iconCancel.setOnClickListener { txtInputBox.setText("") }
             a.recycle()
         }
@@ -221,7 +221,8 @@ class FormInputText : RelativeLayout, TextWatcher  {
         initClickListener()
         return this
     }
-    fun setOnFocusChangeListener(listener: OnFocusChangeListener):FormInputText{
+    
+    override fun setOnFocusChangeListener(listener: OnFocusChangeListener):FormInputText{
         mFocusListener=listener
         return this
     }
