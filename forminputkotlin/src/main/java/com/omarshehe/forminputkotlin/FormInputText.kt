@@ -224,7 +224,6 @@ class FormInputText : RelativeLayout, TextWatcher  {
     
     override fun setOnFocusChangeListener(listener: OnFocusChangeListener){
         mFocusListener=listener
-        return this
     }
 
     fun setTextColor(color:Int):FormInputText{
