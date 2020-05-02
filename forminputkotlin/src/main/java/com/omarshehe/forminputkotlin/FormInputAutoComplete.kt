@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.form_input_autocomplete.view.*
 import java.util.*
 import kotlin.properties.Delegates
 
-class FormInputAutoComplete : RelativeLayout, TextWatcher {
+open class FormInputAutoComplete : RelativeLayout, TextWatcher {
     private lateinit var mAdapterAutocomplete: AutoCompleteAdapter
     private lateinit var mPresenter: FormInputContract.Presenter
 
@@ -40,6 +40,7 @@ class FormInputAutoComplete : RelativeLayout, TextWatcher {
     private var mBackground: Int =R.drawable.bg_txt_square
     private var inputError:Int = 1
     private var isMandatory: Boolean = false
+    private var allowCustom: Boolean = true
     private var mInputType:Int = 1
     private var isShowValidIcon= true
     private var isFirstOpen: Boolean = true
@@ -80,6 +81,7 @@ class FormInputAutoComplete : RelativeLayout, TextWatcher {
             mHeight = a.getDimension(R.styleable.FormInputLayout_form_height,resources.getDimension( R.dimen.formInputInput_box_height)).toInt()
             mBackground = a.getResourceId(R.styleable.FormInputLayout_form_background, R.drawable.bg_txt_square)
             isMandatory = a.getBoolean(R.styleable.FormInputLayout_form_isMandatory, false)
+            allowCustom = a.getBoolean(R.styleable.FormInputLayout_form_allowCustom, true)
             isShowValidIcon  = a.getBoolean(R.styleable.FormInputLayout_form_showValidIcon, true)
             mInputType = a.getInt(R.styleable.FormInputLayout_form_inputType, 1)
             setLabelVisibility(a.getBoolean(R.styleable.FormInputLayout_form_showLabel, true))
@@ -129,6 +131,11 @@ class FormInputAutoComplete : RelativeLayout, TextWatcher {
         mLabel=Utils.setLabel(tvLabel,mLabel,isMandatory)
         return this
     }
+    fun setAllowCustom(_allowCustom: Boolean) : FormInputAutoComplete {
+        allowCustom = _allowCustom
+        return this
+    }
+    
     fun setLabelVisibility(show:Boolean): FormInputAutoComplete {
         isShowLabel=Utils.setViewVisibility(tvLabel,show)
         return this
@@ -142,7 +149,7 @@ class FormInputAutoComplete : RelativeLayout, TextWatcher {
 
     fun setValue(value: String) :FormInputAutoComplete {
         mValue = value
-        if(mArrayList.contains(mValue)){
+        if(allowCustom || mArrayList.contains(mValue)){
             txtInputBox.setText(value)
             verifyInputError("", View.GONE)
         }else{
@@ -335,7 +342,7 @@ class FormInputAutoComplete : RelativeLayout, TextWatcher {
             }
         } else {
             if (isMandatory) {
-                if(mArrayList.contains(mValue)){
+                if(allowCustom || mArrayList.contains(mValue)){
                     setTextColor(mTextColor)
                     verifyInputError("", View.GONE)
                 }else{
