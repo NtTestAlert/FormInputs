@@ -222,7 +222,7 @@ class FormInputText : RelativeLayout, TextWatcher  {
         return this
     }
     
-    override fun setOnFocusChangeListener(listener: OnFocusChangeListener):FormInputText{
+    override fun setOnFocusChangeListener(listener: OnFocusChangeListener){
         mFocusListener=listener
         return this
     }
