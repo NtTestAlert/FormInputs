@@ -51,6 +51,39 @@ open class FormInputAutoComplete : RelativeLayout, TextWatcher {
     private var styleAttr: Int = 0
     private var mListener : AutoCompleteAdapter.ItemSelectedListener? =null
 
+    
+    private var mListeners: ArrayList<TextWatcher>? = null
+    /**
+     * Adds a TextWatcher to the list of those whose methods are called
+     * whenever this TextView's text changes.
+     *
+     *
+     * In 1.0, the [TextWatcher.afterTextChanged] method was erroneously
+     * not called after [.setText] calls.  Now, doing [.setText]
+     * if there are any text changed listeners forces the buffer type to
+     * Editable if it would not otherwise be and does call this method.
+     */
+    fun addTextChangedListener(watcher: TextWatcher) {
+        if (mListeners == null) {
+            mListeners = ArrayList()
+        }
+        mListeners!!.add(watcher)
+    }
+
+    /**
+     * Removes the specified TextWatcher from the list of those whose
+     * methods are called
+     * whenever this TextView's text changes.
+     */
+    fun removeTextChangedListener(watcher: TextWatcher?) {
+        if (mListeners != null) {
+            val i = mListeners!!.indexOf(watcher)
+            if (i >= 0) {
+                mListeners!!.removeAt(i)
+            }
+        }
+    }
+
     constructor(context: Context) : super(context){
         initView()
     }
@@ -318,16 +351,39 @@ open class FormInputAutoComplete : RelativeLayout, TextWatcher {
     }
 
 
+
     /**
      * Listener on text change
      * */
     override fun afterTextChanged(s: Editable?) {
+        val list = mListeners
+        if (list != null) {
+            val count = list.size
+            for (i in 0 until count) {
+                list[i].afterTextChanged(s)
+            }
+        }
     }
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        val list = mListeners
+        if (list != null) {
+            val count = list.size
+            for (i in 0 until count) {
+                list[i].beforeTextChanged(s, start, before, after)
+            }
+        }
     }
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, pcount: Int) {
         if (!isFirstOpen) {
             inputBoxOnTextChange(s.toString())
+        }
+        
+        val list = mListeners
+        if (list != null) {
+            val count = list.size
+            for (i in 0 until count) {
+                list[i].onTextChanged(s, start, before, pcount)
+            }
         }
         isFirstOpen=false
     }
